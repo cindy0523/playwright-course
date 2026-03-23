@@ -282,5 +282,7 @@ Job "Run Automation Test":
 - Làm xong bấm nút Build Now bên trái
 
 ### Publish PW report:
-- Nếu gặp problem dưới local thì đc nhưng trong Jenkins thì ko được, thì report lỗi rất quan trọng
-- Click vào "workspace" tab của jenkins
+Nếu gặp problem dưới local thì đc nhưng trong Jenkins thì ko được, thì report lỗi rất quan trọng:
+- Click vào "Workspace" tab của Jenkins - Workspace là thư mục mà Jenkins chứa source code khi chạy job
+- Khi chạy 1 job, Jenkins sẽ clone code từ github về, chạy build/test/script và tạo file output (test, report, artifact) --> mọi thứ diễn trong workspace
+- Khi xem report index html trên Jenkins sẽ bị lỗi ko render được, bị dính Content Security Policy
