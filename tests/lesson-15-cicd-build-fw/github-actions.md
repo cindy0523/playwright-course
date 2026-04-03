@@ -81,7 +81,9 @@ jobs:
 ## Github Actions: Playwright Integration
 
 ### Cách 1: Tải Playwright browser và dependency
+
 1. Thêm đoạn này vào file cicd.yml có sẵn
+
 ```yaml
  test_integration:
     name: Integration Tests (Playwright)
@@ -105,7 +107,7 @@ jobs:
 ```yaml
 name: CI
 ```
-- Tên pipeline hiển thị trong Github Actions
+- **name**: Tên pipeline hiển thị trong Github Actions
 ```yaml
 on:
   push:
@@ -113,24 +115,24 @@ on:
   pull request:
   workflow_dispatch:
 ```
-- on: trigger khi nào pipeline chạy
+- **on**: trigger khi nào pipeline chạy
 
 Trong đó:
-- push: khi bạn push code lên nhánh 'main' thì pipeline chạy
-- pull request: khi bạn tạo PR thì cũng chạy pipeline luôn
-- workflow_dispatch: cho phép bạn bấm nút chạy tay trong Github Actions
+- **push**: khi bạn push code lên nhánh 'main' thì pipeline chạy
+- **pull request**: khi bạn tạo PR thì cũng chạy pipeline luôn
+- **workflow_dispatch**: cho phép bạn bấm nút chạy tay trong Github Actions
 
 ```yaml
 concurrency:
   group: ci-${{github.ref}}
   cancel-in-progress: true
 ```
-- concurrency: config giới hạn chạy song song, dùng để chống việc chạy job trùng nhau, tránh gây tốn tài nguyên + conflict
-- group = 1 nhóm pipeline --> github nhìn vào sẽ check pipeline nào cùng 1 nhóm để quyết định rule (cancel/ không cancel)
-- ci: prefix đặt tên (tùy ý)
-- github.ref (biến của Github) = tên branch hiện tại
+- **concurrency**: config giới hạn chạy song song, dùng để chống việc chạy job trùng nhau, tránh gây tốn tài nguyên + conflict
+- **group** = 1 nhóm pipeline --> github nhìn vào sẽ check pipeline nào cùng 1 nhóm để quyết định rule (cancel/ không cancel)
+- **ci**: prefix đặt tên (tùy ý)
+- **github.ref** (biến của Github) = tên branch hiện tại
 --> mỗi branch là 1 group riêng biệt, pipeline branch A ko impact pipeline branch B
-- cancel-in-progress: true --> nghĩa là nếu có 1 pipeline đang chạy trong group mà pipeline mới trigger thì cancel luôn cái cũ
+- **cancel-in-progress**: true --> nghĩa là nếu có 1 pipeline đang chạy trong group mà pipeline mới trigger thì cancel luôn cái cũ
 
 **Lưu ý:**
 - Nó ko cancel các branch vs nhau
@@ -140,15 +142,56 @@ concurrency:
 ```yaml
 jobs:
 ```
-- trong github actions, jobs = 1 máy ảo riêng và mỗi job nhỏ bên trong chạy độc lập và ko share data nếu ko config thêm
+- trong github actions, **jobs** = 1 máy ảo riêng và mỗi job nhỏ bên trong chạy độc lập và ko share data nếu ko config thêm
 
 ```yaml
 build:
   name: Build
   runs-on: ubuntu-latest
 ```
-- job 'build' chạy trên linux ubuntu bản mới nhất
+- **build:** tên tự đặt cho job, có thể đổi tên, đặt sao cho dễ hiểu là ok
+- **runs-on: ubuntu-latest**: Github cấp 1 máy ảo để job 'build' chạy trên hệ điều hành linux ubuntu bản mới nhất
 
 ```yaml
-- uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 ```
+- **steps:** các bước thực hiện job build này, các bước thực hiện tuần tự từ trên > xuống
+- **name:** tên step, tự đặt tùy ý miễn meaningful
+- **uses:** mượn lệnh có sẵn của Github Actions để làm 1 tác vụ
+- **actions**: tên tổ chức sở hữu actions trên github
+- **checkout**: đi vào repo của bạn, copy toàn bộ source code và dán vào máy ảo Ubuntu
+- **v4**: version 4 của Github Actions
+- **uses: actions/checkout@v4**: máy ảo Ubuntu mở ra sẽ hoàn toàn trống rỗng.
+Bước này sử dụng 1 action có sẵn của Github để tải toàn bộ code của repository của bạn về máy ảo để xử lý
+
+```yaml
+- name: Setup Node.js
+  uses: actions/setup-node@v4
+  with:
+    node-version: 22
+    cache: npm
+```
+
+- Step này có **name** là "Setup Node.js"
+- **uses: actions/setup-node@v4**: setup thư viện Nodejs
+- **with**: truyền action thêm
+- **node-version: 22**: chỉ định cài đặt nodejs version 22
+- **cache: npm**:  tính năng cache - nó ghi nhớ các thư viện đã tải. Nếu bạn không thêm thư viện mới, nó sẽ lấy từ bộ nhớ đệm để chạy nhanh hơn
+
+```yaml
+      - name: Install deps
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+```
+- **run**: run để tự gõ lệnh vào terminal: "npm ci"
+- **npm ci**: ci viết tắt của 'clean install' hoặc 'continous integration'
+  - 'npm ci' là lệnh dùng cho github actions / server, dùng để cài đặt chính xác 100% những gì trong file package.json và không lệch dù chỉ 1 dấu chấm
+  (khác với 'npm install' dùng ở máy cá nhân và có thể auto update package.json ở ver mới hơn nếu cho phép)
+  - npm ci nếu phát hiện package.json và package-lock.json khác nhau, nó sẽ dừng lại báo lỗi chứ ko tự sửa
+  (so với npm install, nếu bạn sửa file package.json, nó sẽ tự update lại file đó)
+  - npm ci nhanh hơn npm install vì nó chỉ cài đặt theo đúng như những j ở package-lock.json
+  - npm ci xóa sạch thư mục 'node_module' cũ rồi tải mới hoàn toàn, còn npm install thì overwrite
