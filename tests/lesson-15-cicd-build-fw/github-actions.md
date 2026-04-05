@@ -195,3 +195,4 @@ Bước này sử dụng 1 action có sẵn của Github để tải toàn bộ 
   (so với npm install, nếu bạn sửa file package.json, nó sẽ tự update lại file đó)
   - npm ci nhanh hơn npm install vì nó chỉ cài đặt theo đúng như những j ở package-lock.json
   - npm ci xóa sạch thư mục 'node_module' cũ rồi tải mới hoàn toàn, còn npm install thì overwrite
+
