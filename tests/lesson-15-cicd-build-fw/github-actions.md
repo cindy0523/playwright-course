@@ -101,9 +101,11 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 ```
-2. Click "Commit changes" và click vào tab "Actions" để xem Pipeline run như thế nào
+2. Click "Commit changes" để commit và click vào tab "Actions" để xem Pipeline run như thế nào
+3. Tới tab "Pull request" và tạo 1 PR mới = cách click vào nút "New pull request"
+4. Sau khi tạo PR xong thì sẽ trigger pipeline
 
-**Giải thích từng dòng file yaml:**
+### Giải thích từng dòng file yaml:
 ```yaml
 name: CI
 ```
@@ -196,3 +198,15 @@ Bước này sử dụng 1 action có sẵn của Github để tải toàn bộ 
   - npm ci nhanh hơn npm install vì nó chỉ cài đặt theo đúng như những j ở package-lock.json
   - npm ci xóa sạch thư mục 'node_module' cũ rồi tải mới hoàn toàn, còn npm install thì overwrite
 
+``` yaml
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+```
+- Lệnh này (đi kèm với flag --with-deps) sẽ làm 2 việc 1 lúc, vừa tải browser binaries (Chromium, Firefox, Webkit), vừa cài thêm system dependencies (OS-level - dựa vào hệ điều hành mà nó detect được) tránh việc gặp lỗi ko đáng có ví dụ như browser ko launch được
+- **Browser binaries**: file thực thi (executable) của browser (bản browser được build sẵn, có thể chạy trực tiếp mà k cần cài Chrome/Firefox), có thể chạy headless
+
+```yaml
+steps:
+   - name: Mock deployment run: echo 'Mock deployment was successful!'
+```
+- echo là 1 lệnh đơn giản để in ra text trong terminal/bash script/CI script
