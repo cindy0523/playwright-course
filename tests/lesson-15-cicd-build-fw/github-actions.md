@@ -105,7 +105,7 @@ jobs:
 3. Tới tab "Pull request" và tạo 1 PR mới = cách click vào nút "New pull request"
 4. Sau khi tạo PR xong thì sẽ trigger pipeline
 
-### Giải thích từng dòng file yaml:
+#### Giải thích từng dòng file yaml:
 ```yaml
 name: CI
 ```
@@ -210,3 +210,26 @@ steps:
    - name: Mock deployment run: echo 'Mock deployment was successful!'
 ```
 - echo là 1 lệnh đơn giản để in ra text trong terminal/bash script/CI script
+
+### Cách 2: Sử dụng Docker image
+1. Add thêm đoạn này vào file yaml
+```yaml
+e2e:
+    name: E2E Playwright tests
+    runs-on: ubuntu-latest
+    needs: deploy
+    container:
+      image: mcr.microsoft.com/playwright:v1.54.2-jammy
+      options: --user 1001
+    env:
+      E2E_BASE_URL: https://spanish-cards.netlify.app/
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Playwright tests
+        run: npx playwright test
+```
+
+- Lúc này ở bước steps, mình sử dụng docker image, nó thay thế cho bước: setup nodejs, install dependencies, install OS dependencies, playwright browsers --> tất cả đã có Docker image lo
+- Khi run pipeline này, ở job e2e sẽ thấy chạy nhanh hơn rất nhiều
