@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
+    "module": "Node16",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,8 +11,8 @@
     "types": ["node", "@playwright/test"]
   },
   "include": [
-    "tests/**/*.ts", 
-    "playwright.config.ts", 
+    "tests/**/*.ts",
+    "playwright.config.ts",
     "api/**/*.ts"
 , "algo.ts", "tests-examples/example.spec.ts"  ]
 }

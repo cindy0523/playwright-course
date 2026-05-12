@@ -13,7 +13,7 @@ let desc = 'How to use API to create article';
 let body = 'Hello testing world';
 let tagList = ['Playwright Viet Nam', 'pw', 'pw-k11, k11-practice'];
 
-test.describe("Exercise 11", () => {
+test.describe("Auto API flow: Exercise 11 @api", () => {
     let conduitApi: ConduitApi;
 
     test.beforeEach(async ({ request }) => {

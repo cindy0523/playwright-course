@@ -23,18 +23,13 @@ export default defineConfig({
   // Opt out of parallel tests on CI. (best practice)
   // workers: process.env.CI ? 3 : 4,
 
-  // xuất html report
   reporter: 'html',
-
-  // Setting cho tất cả các test. See https://playwright.dev/docs/api/class-testoptions.
   use: {
     headless: false,
-
-    /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.BASE_URL,
-
-    // See more: https://playwright.dev/docs/trace-viewer
-    trace: "on-first-retry",
+    screenshot: "off",
+    video: "off",
+    trace: "retain-on-failure", //cái mạnh nhất
     // viewport: { width: 1920, height: 1080 },
     // video: {
     //   mode: 'on-first-retry',
@@ -42,7 +37,6 @@ export default defineConfig({
     // },
     // colorScheme: 'dark',
     // offline: false,
-
   },
 
   /* Config projects để chạy cho nhiều browsers */
@@ -103,6 +97,7 @@ export default defineConfig({
     //     baseURL: 'https://staging.app.com'
     //   }
     // }
+
   ],
 
   /* Run your local dev server before starting the tests */
@@ -111,4 +106,5 @@ export default defineConfig({
   //   url: 'http://127.0.0.1:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
+
 });

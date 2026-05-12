@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test"
+    "regression": "npx playwright test",
+    "api": "npx playwright test -g '@api'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^22.5.5",
+    "allure-playwright": "^3.8.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
